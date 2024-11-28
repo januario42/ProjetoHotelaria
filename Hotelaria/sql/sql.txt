@@ -1,0 +1,50 @@
+CREATE DATABASE hotel_management;
+
+USE hotel_management;
+
+-- Tabela de hóspedes
+CREATE TABLE hospedes (
+    id_hospede INT AUTO_INCREMENT PRIMARY KEY,
+    nome_completo VARCHAR(255) NOT NULL,       
+    cpf CHAR(11) UNIQUE NOT NULL,              
+    data_nascimento DATE NOT NULL,             
+    telefone VARCHAR(15) NOT NULL,            
+    email VARCHAR(255) NOT NULL,               
+    endereco TEXT,                            
+    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
+);
+
+-- Tabela de quartos
+CREATE TABLE quartos (
+    id INT AUTO_INCREMENT PRIMARY KEY, 
+    numero INT NOT NULL UNIQUE,        
+    tipo VARCHAR(50) NOT NULL,         
+    preco DECIMAL(10, 2) NOT NULL,      
+    andar INT NOT NULL,                
+    status ENUM('Disponível', 'Ocupado', 'Manutenção') DEFAULT 'Disponível',
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP 
+);
+-- Tabela de reservas
+CREATE TABLE reservas (
+    numero_reserva VARCHAR(20) NOT NULL PRIMARY KEY,
+    id_hospede INT NOT NULL,
+    numero INT NOT NULL,
+    data_entrada DATE NOT NULL,
+    data_saida DATE NOT NULL,
+    status ENUM('Confirmada', 'Cancelada', 'Em Espera') NOT NULL,
+    CONSTRAINT fk_hospede FOREIGN KEY (id_hospede) REFERENCES hospedes (id_hospede) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_quarto FOREIGN KEY (numero) REFERENCES quartos (numero) ON DELETE CASCADE ON UPDATE CASCADE
+);
+CREATE TABLE funcionarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    cpf VARCHAR(14) UNIQUE NOT NULL,
+    cargo VARCHAR(50) NOT NULL,
+    salario DECIMAL(10, 2) NOT NULL
+);
+INSERT INTO funcionarios (nome, cpf, cargo, salario)
+VALUES 
+('João Silva', '123.456.789-10', 'Recepcionista', 2500.00);
+
+
